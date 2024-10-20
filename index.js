@@ -40,30 +40,30 @@ app.post('/addpassword', async (req, res) => {
 // POST route to reveal a password
 app.post('/revealpassword', async (req, res) => {
   const { title } = req.body;
-    console.log(title);
-    res.send("message recieved");
-//   try {
-//     const result = await turso.execute(`SELECT * FROM passwords WHERE title = ?`, [title]);
+    // console.log(title);
+    // res.send("message recieved");
+  try {
+    const result = await turso.execute(`SELECT * FROM passwords WHERE title = ?`, [title]);
 
-//     if (result.rows.length === 0) {
-//       res.status(404).send("Error: 404; Data entry not found!!");
-//       return;
-//     }
+    if (result.rows.length === 0) {
+      res.status(404).send("Error: 404; Data entry not found!!");
+      return;
+    }
 
-//     const password = decrypt({
-//       message: result.rows[0].passwordscol,
-//       newiv: result.rows[0].iv
-//     });
+    const password = decrypt({
+      message: result.rows[0].passwordscol,
+      newiv: result.rows[0].iv
+    });
 
-//     res.send(password);
-//   } catch (err) {
-//     console.error("Error revealing password:", err);
-//     res.status(500).send("Error revealing password!");
-//   }
+    res.send(password);
+  } catch (err) {
+    console.error("Error revealing password:", err);
+    res.status(500).send("Error revealing password!");
+  }
 });
 
 // Use dynamic port for production (Vercel) and fallback to 3001 for local development
-const PORT = process.env.PORT || 3001;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);
 });
